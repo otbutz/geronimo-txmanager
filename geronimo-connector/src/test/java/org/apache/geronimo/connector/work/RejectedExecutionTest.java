@@ -4,14 +4,14 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.RejectedExecutionException;
 
 import jakarta.annotation.Nonnull;
+import jakarta.resource.spi.work.RetryableWorkRejectedException;
 import jakarta.resource.spi.work.Work;
-import jakarta.resource.spi.work.WorkRejectedException;
 
 import junit.framework.TestCase;
 import org.junit.Assert;
 
 /**
- * Test for {@link GeronimoWorkManager} to ensure that {@link RejectedExecutionException} is wrapped in {@link WorkRejectedException}.
+ * Test for {@link GeronimoWorkManager} to ensure that {@link RejectedExecutionException} is wrapped in {@link RetryableWorkRejectedException}.
  */
 public class RejectedExecutionTest extends TestCase {
 
@@ -25,19 +25,19 @@ public class RejectedExecutionTest extends TestCase {
 
 
     public void testDoWork() {
-        Assert.assertThrows(WorkRejectedException.class, () -> workManager.doWork(new NoopWork()));
+        Assert.assertThrows(RetryableWorkRejectedException.class, () -> workManager.doWork(new NoopWork()));
     }
 
     public void testStartWork() {
-        Assert.assertThrows(WorkRejectedException.class, () -> workManager.startWork(new NoopWork()));
+        Assert.assertThrows(RetryableWorkRejectedException.class, () -> workManager.startWork(new NoopWork()));
     }
 
     public void testScheduleWork() {
-        Assert.assertThrows(WorkRejectedException.class, () -> workManager.scheduleWork(new NoopWork()));
+        Assert.assertThrows(RetryableWorkRejectedException.class, () -> workManager.scheduleWork(new NoopWork()));
     }
 
     public void testCause() {
-        WorkRejectedException wre = Assert.assertThrows(WorkRejectedException.class, () -> workManager.doWork(new NoopWork()));
+        RetryableWorkRejectedException wre = Assert.assertThrows(RetryableWorkRejectedException.class, () -> workManager.doWork(new NoopWork()));
         Assert.assertTrue("Expected cause to be RejectedExecutionException", wre.getCause() instanceof RejectedExecutionException);
     }
 

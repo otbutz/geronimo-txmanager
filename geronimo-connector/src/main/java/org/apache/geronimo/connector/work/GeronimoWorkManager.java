@@ -23,13 +23,13 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.RejectedExecutionException;
 
 import jakarta.resource.spi.work.ExecutionContext;
+import jakarta.resource.spi.work.RetryableWorkRejectedException;
 import jakarta.resource.spi.work.Work;
 import jakarta.resource.spi.work.WorkCompletedException;
 import jakarta.resource.spi.work.WorkContext;
 import jakarta.resource.spi.work.WorkException;
 import jakarta.resource.spi.work.WorkListener;
 import jakarta.resource.spi.work.WorkManager;
-import jakarta.resource.spi.work.WorkRejectedException;
 
 import org.apache.geronimo.connector.work.pool.ScheduleWorkExecutor;
 import org.apache.geronimo.connector.work.pool.StartWorkExecutor;
@@ -208,7 +208,7 @@ public class GeronimoWorkManager implements WorkManager {
             wcj.setErrorCode(WorkException.INTERNAL);
             throw wcj;
         } catch (RejectedExecutionException e) {
-            WorkRejectedException wre = new WorkRejectedException(
+            RetryableWorkRejectedException wre = new RetryableWorkRejectedException(
                     "The execution has been rejected.", e);
             wre.setErrorCode(WorkException.INTERNAL);
             throw wre;
